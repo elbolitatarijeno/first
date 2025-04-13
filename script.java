@@ -5,12 +5,12 @@ import { v4 as uuidv4 } from "https://cdn.jsdelivr.net/npm/uuid/dist/umd/uuidv4.
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyBxoxYAOC1EGZD5zcnREOeHEfJA7jdizg8",
   authDomain: "elbolitatarijeno-1fac7.firebaseapp.com",
   projectId: "elbolitatarijeno-1fac7",
   storageBucket: "elbolitatarijeno-1fac7.appspot.com",
   messagingSenderId: "468578561335",
-  appId: "YOUR_APP_ID"
+  appId: "1:468578561335:web:cfb802852a89087b08beb2"
 };
 
 // Initialize Firebase
