@@ -1,66 +1,78 @@
-// Import Firebase modules
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import QRCode from "https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js";
+import { v4 as uuidv4 } from "https://cdn.jsdelivr.net/npm/uuid/dist/umd/uuidv4.min.js";
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBxoxYAOC1EGZD5zcnREOeHEfJA7jdizg8",
+  apiKey: "YOUR_API_KEY",
   authDomain: "elbolitatarijeno-1fac7.firebaseapp.com",
   projectId: "elbolitatarijeno-1fac7",
   storageBucket: "elbolitatarijeno-1fac7.appspot.com",
   messagingSenderId: "468578561335",
   appId: "YOUR_APP_ID"
-  measurementId: "G-TCYYPJ94GX"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Save Notes to Firestore
+// Save Note Function
 async function saveNote() {
   const noteInput = document.getElementById("noteInput").value;
   if (noteInput.trim()) {
     try {
-      await addDoc(collection(db, "notes"), { content: noteInput, timestamp: new Date() });
+      await addDoc(collection(db, "notes"), {
+        content: noteInput,
+        timestamp: new Date()
+      });
       alert("Note saved successfully!");
       document.getElementById("noteInput").value = "";
-      loadNotes();
     } catch (error) {
-      console.error("Error saving note: ", error);
+      console.error("Error saving note:", error);
+      alert("Failed to save the note. Check the console for details.");
     }
   } else {
-    alert("Please write something!");
+    alert("Please enter a note!");
   }
 }
 
-// Load Notes from Firestore
-async function loadNotes() {
+// Retrieve Notes in Real-Time
+function retrieveNotes() {
   const notesList = document.getElementById("notesList");
-  notesList.innerHTML = "";
 
-  const querySnapshot = await getDocs(collection(db, "notes"));
-  querySnapshot.forEach((doc) => {
-    const listItem = document.createElement("li");
-    listItem.textContent = doc.data().content;
-    notesList.appendChild(listItem);
+  onSnapshot(collection(db, "notes"), (snapshot) => {
+    notesList.innerHTML = "";
+    snapshot.forEach((doc) => {
+      const note = doc.data().content;
+      const listItem = document.createElement("li");
+      listItem.textContent = note;
+      notesList.appendChild(listItem);
+    });
   });
 }
 
-// Generate QR Code
+// QR Code Generator
 function generateQRCode() {
   const qrInput = document.getElementById("qrInput").value;
-  const qrOutput = document.getElementById("qrOutput");
-
-  qrOutput.innerHTML = ""; // Clear previous QR code
-  QRCode.toCanvas(qrInput, { width: 200 }, (error, canvas) => {
-    if (error) console.error(error);
-    qrOutput.appendChild(canvas);
-  });
+  if (qrInput.trim()) {
+    const qrOutput = document.getElementById("qrOutput");
+    qrOutput.innerHTML = ""; // Clear previous QR code
+    QRCode.toCanvas(qrInput, (error, canvas) => {
+      if (error) console.error("QR Code error:", error);
+      qrOutput.appendChild(canvas);
+    });
+  } else {
+    alert("Please enter text for the QR code!");
+  }
 }
 
-// Generate Token
+// Token Generator
 function generateToken() {
-  const token = uuidv4(); // Generates a unique token
-  document.getElementById("tokenOutput").textContent = `Generated Token: ${token}`;
+  const tokenOutput = document.getElementById("tokenOutput");
+  const token = uuidv4(); // Generate unique token
+  tokenOutput.textContent = token;
 }
+
+// Load Notes on Page Load
+window.onload = retrieveNotes;
