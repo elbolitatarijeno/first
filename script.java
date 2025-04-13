@@ -11,6 +11,7 @@ const firebaseConfig = {
   storageBucket: "elbolitatarijeno-1fac7.appspot.com",
   messagingSenderId: "468578561335",
   appId: "1:468578561335:web:cfb802852a89087b08beb2"
+  measurementId: "G-TCYYPJ94GX"
 };
 
 // Initialize Firebase
