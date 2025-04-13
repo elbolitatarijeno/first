@@ -3,14 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My To-Do Website</title>
+  <title>Advanced Firebase Website</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/uuid/dist/umd/uuidv4.min.js"></script> <!-- For token generator -->
 </head>
 <body>
   <header>
-    <h1>To-Do Website</h1>
-    <p id="datetime"></p>
+    <h1>Welcome to My Advanced Website</h1>
+    <p>Your all-in-one platform powered by Firebase and GitHub Pages!</p>
   </header>
+  
   <main>
     <!-- Notes Section -->
     <section id="notes">
@@ -20,19 +25,26 @@
       <ul id="notesList"></ul>
     </section>
 
-    <!-- Drawing Section -->
-    <section id="drawing">
-      <h2>Draw</h2>
-      <canvas id="drawingCanvas" width="400" height="400"></canvas>
+    <!-- QR Code Generator Section -->
+    <section id="qrcode">
+      <h2>QR Code Generator</h2>
+      <input type="text" id="qrInput" placeholder="Enter text for QR code">
+      <button onclick="generateQRCode()">Generate QR Code</button>
+      <div id="qrOutput"></div>
     </section>
 
-    <!-- File Upload Section -->
-    <section id="upload">
-      <h2>Upload Files</h2>
-      <input type="file" id="fileInput" multiple>
-      <div id="filePreview"></div>
+    <!-- Token Generator Section -->
+    <section id="token">
+      <h2>Token Generator</h2>
+      <button onclick="generateToken()">Generate Token</button>
+      <p id="tokenOutput"></p>
     </section>
   </main>
+
+  <footer>
+    <p>&copy; 2025 Your Name. Powered by Firebase.</p>
+  </footer>
+
   <script src="script.js"></script>
 </body>
 </html>

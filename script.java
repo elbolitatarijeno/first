@@ -1,47 +1,65 @@
-function saveNote() {
-  const noteInput = document.getElementById("noteInput").value;
-  const notesList = document.getElementById("notesList");
+// Import Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js";
 
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Save Notes to Firestore
+async function saveNote() {
+  const noteInput = document.getElementById("noteInput").value;
   if (noteInput.trim()) {
-    const listItem = document.createElement("li");
-    listItem.textContent = noteInput;
-    notesList.appendChild(listItem);
-    document.getElementById("noteInput").value = ""; // Clear input box
+    try {
+      await addDoc(collection(db, "notes"), { content: noteInput, timestamp: new Date() });
+      alert("Note saved successfully!");
+      document.getElementById("noteInput").value = "";
+      loadNotes();
+    } catch (error) {
+      console.error("Error saving note: ", error);
+    }
   } else {
     alert("Please write something!");
   }
 }
 
-const canvas = document.getElementById("drawingCanvas");
-const ctx = canvas.getContext("2d");
-let drawing = false;
+// Load Notes from Firestore
+async function loadNotes() {
+  const notesList = document.getElementById("notesList");
+  notesList.innerHTML = "";
 
-canvas.addEventListener("mousedown", () => (drawing = true));
-canvas.addEventListener("mouseup", () => (drawing = false));
-canvas.addEventListener("mousemove", draw);
-
-function draw(event) {
-  if (!drawing) return;
-  ctx.fillStyle = "black";
-  ctx.beginPath();
-  ctx.arc(event.offsetX, event.offsetY, 2, 0, Math.PI * 2);
-  ctx.fill();
+  const querySnapshot = await getDocs(collection(db, "notes"));
+  querySnapshot.forEach((doc) => {
+    const listItem = document.createElement("li");
+    listItem.textContent = doc.data().content;
+    notesList.appendChild(listItem);
+  });
 }
 
-function updateDateTime() {
-  const datetime = new Date().toLocaleString();
-  document.getElementById("datetime").textContent = `Current Date and Time: ${datetime}`;
+// Generate QR Code
+function generateQRCode() {
+  const qrInput = document.getElementById("qrInput").value;
+  const qrOutput = document.getElementById("qrOutput");
+
+  qrOutput.innerHTML = ""; // Clear previous QR code
+  QRCode.toCanvas(qrInput, { width: 200 }, (error, canvas) => {
+    if (error) console.error(error);
+    qrOutput.appendChild(canvas);
+  });
 }
-setInterval(updateDateTime, 1000); // Update every second
 
-document.getElementById("fileInput").addEventListener("change", (event) => {
-  const files = event.target.files;
-  const filePreview = document.getElementById("filePreview");
-  filePreview.innerHTML = "";
-
-  for (const file of files) {
-    const fileDiv = document.createElement("div");
-    fileDiv.textContent = `Uploaded: ${file.name}`;
-    filePreview.appendChild(fileDiv);
-  }
-});
+// Generate Token
+function generateToken() {
+  const token = uuidv4(); // Generates a unique token
+  document.getElementById("tokenOutput").textContent = `Generated Token: ${token}`;
+}
