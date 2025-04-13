@@ -3,13 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My GitHub Page</title>
+  <title>My To-Do Website</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Welcome to My Website</h1>
-  <p id="status">Status: Offline</p>
-  <button onclick="pingServer()">Ping Server</button>
+  <header>
+    <h1>To-Do Website</h1>
+    <p id="datetime"></p>
+  </header>
+  <main>
+    <!-- Notes Section -->
+    <section id="notes">
+      <h2>Write Notes</h2>
+      <textarea id="noteInput" placeholder="Write your note here..."></textarea>
+      <button onclick="saveNote()">Save Note</button>
+      <ul id="notesList"></ul>
+    </section>
+
+    <!-- Drawing Section -->
+    <section id="drawing">
+      <h2>Draw</h2>
+      <canvas id="drawingCanvas" width="400" height="400"></canvas>
+    </section>
+
+    <!-- File Upload Section -->
+    <section id="upload">
+      <h2>Upload Files</h2>
+      <input type="file" id="fileInput" multiple>
+      <div id="filePreview"></div>
+    </section>
+  </main>
   <script src="script.js"></script>
 </body>
 </html>
